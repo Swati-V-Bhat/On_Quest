@@ -17,6 +17,7 @@ import AddLocation from "./components/QuestPopups/AddLocation";
 import TagPeople from "./components/QuestPopups/TagPeople";
 import AddTags from "./components/QuestPopups/AddTags";
 import Home from "./pages/Home";
+import QuestCreator from "./components/quest/QuestCreator";
 // import 
 
 
@@ -25,8 +26,10 @@ import Home from "./pages/Home";
 const App = () => (
   
   <>
-    { (<MyProfile/>)? (<Feed/>):<Home/>}  {/*if Myprofile exists, i.e if user is logged in render feed , else render home-landing-page */}
+    {/* { (<MyProfile/>)? (<Feed/>):<Home/>}   */}
+    {/*if Myprofile exists, i.e if user is logged in render feed , else render home-landing-page */}
     
+  <QuestCreator/>
     
 {/* <MyProfile/>  */}
 
