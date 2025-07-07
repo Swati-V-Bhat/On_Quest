@@ -40,7 +40,7 @@ const Navbar = () => {
   const [selectedAvatar, setSelectedAvatar] = useState(null);
 
   // Monitor auth state
- useEffect(() => {
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       console.log("Auth state changed:", currentUser?.photoURL);
       setUser(currentUser);
@@ -70,7 +70,7 @@ const Navbar = () => {
     return () => unsubscribe();
   }, []);
 
-   const getUserPhotoURL = () => {
+  const getUserPhotoURL = () => {
     // Priority: userData (from Firestore) > user (from Auth) > default
     const photoURL = userData?.photoURL || user?.photoURL;
     console.log("Photo URL being used:", photoURL);
@@ -153,35 +153,35 @@ const Navbar = () => {
     "https://cdn.builder.io/api/v1/image/assets/b783a7681e9247dfa6d0b0f79c8d7bb8/99410d3970fe67ea532993d1c196093377128b25?placeholderIfAbsent=true"
   ];
   
-    const handleEmailSignUp = async (avatar) => {
-      try {
-        setError('');
-        setIsLoading(true);
-        
-        // Basic validation
-        if (!email || !password || !displayName) {
-          throw new Error('Please fill all fields');
-        }
-    
-        const finalAvatar = avatar || 
-          GOOGLE_AVATAR_OPTIONS[Math.floor(Math.random() * GOOGLE_AVATAR_OPTIONS.length)];
-        
-        await signUpWithEmail(email, password, displayName, finalAvatar);
-        
-        // Show success message
-        setError('');
-        setAuthStep('initial');
-        setShowAuthModal(false);
-        
-        // Optional: Show toast notification
-        alert('Sign up successful! Welcome to our community!');
-        
-      } catch (error) {
-        setError(error.message || 'Sign up failed. Please try again.');
-      } finally {
-        setIsLoading(false);
+  const handleEmailSignUp = async (avatar) => {
+    try {
+      setError('');
+      setIsLoading(true);
+      
+      // Basic validation
+      if (!email || !password || !displayName) {
+        throw new Error('Please fill all fields');
       }
-    };
+  
+      const finalAvatar = avatar || 
+        GOOGLE_AVATAR_OPTIONS[Math.floor(Math.random() * GOOGLE_AVATAR_OPTIONS.length)];
+      
+      await signUpWithEmail(email, password, displayName, finalAvatar);
+      
+      // Show success message
+      setError('');
+      setAuthStep('initial');
+      setShowAuthModal(false);
+      
+      // Optional: Show toast notification
+      alert('Sign up successful! Welcome to our community!');
+      
+    } catch (error) {
+      setError(error.message || 'Sign up failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleGoogleSignIn = async () => {
     try {
@@ -396,7 +396,7 @@ const Navbar = () => {
             <button 
               className={`w-full ${email && password && displayName ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'} rounded-lg h-14 font-medium`}
               disabled={!email || !password || !displayName}
-              onClick={handleEmailSignUp}
+              onClick={() => handleEmailSignUp(selectedAvatar)}
             >
               Sign Up
             </button>
@@ -452,55 +452,7 @@ const Navbar = () => {
       
       <NavigationMenu>
         <NavigationMenuList className="flex items-center gap-6">
-           {/* <NavigationMenuItem> */}
-        {/* {loading ? (
-          <div className="h-[48px] w-[48px] bg-gray-200 animate-pulse rounded-full"></div>
-        ) : user ? (
-          <div className="relative">
-            <img
-              src={getUserPhotoURL()}
-              alt="User avatar"
-              className="w-12 h-12 rounded-full cursor-pointer object-cover"
-              onClick={() => setIsOpen(!isOpen)}
-              onError={(e) => {
-                console.log("Image failed to load, using fallback");
-                e.target.src = "https://cdn.builder.io/api/v1/image/assets/b783a7681e9247dfa6d0b0f79c8d7bb8/f2c04753faeb06e92f8c18ca0b4f344bb630c7e7?placeholderIfAbsent=true";
-              }}
-            />
-            {isOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                <div className="px-4 py-2 border-b">
-                  <div className="flex items-center gap-2">
-                    <img 
-                      src={getUserPhotoURL()} 
-                      alt="User" 
-                      className="w-8 h-8 rounded-full object-cover"
-                    />
-                    <div>
-                      <p className="text-sm font-medium">{userData?.displayName || user?.displayName || 'User'}</p>
-                      <p className="text-xs text-gray-500">{user.email}</p>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  onClick={handleSignOut}
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  Sign Out
-                </button>
-              </div>
-            )}
-          </div>
-        ) : (
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets/b783a7681e9247dfa6d0b0f79c8d7bb8/f2c04753faeb06e92f8c18ca0b4f344bb630c7e7?placeholderIfAbsent=true"
-            alt="User avatar"
-            className="w-12 h-12 rounded-full cursor-pointer"
-            onClick={toggleAuthModal}
-          />
-        )} */}
-      {/* </NavigationMenuItem> */}
-          
+          {/* My Profile */}
           <NavigationMenuItem className="flex flex-col items-center">
             <img
               src="https://cdn.builder.io/api/v1/image/assets/b783a7681e9247dfa6d0b0f79c8d7bb8/06d56ea533aecd9a2b8ddf71ea41700f8c6b6951?placeholderIfAbsent=true"
@@ -511,6 +463,7 @@ const Navbar = () => {
             <span className="text-xs text-gray-600 mt-1">My Profile</span>
           </NavigationMenuItem>
 
+          {/* Groups */}
           <NavigationMenuItem className="flex flex-col items-center">
             <img
               src="https://cdn.builder.io/api/v1/image/assets/b783a7681e9247dfa6d0b0f79c8d7bb8/06d56ea533aecd9a2b8ddf71ea41700f8c6b6951?placeholderIfAbsent=true"
@@ -520,8 +473,7 @@ const Navbar = () => {
             <span className="text-xs text-gray-600 mt-1">Groups</span>
           </NavigationMenuItem>
 
-          
-          
+          {/* Notifications */}
           <NavigationMenuItem className="flex flex-col items-center">
             <img
               src="https://cdn.builder.io/api/v1/image/assets/b783a7681e9247dfa6d0b0f79c8d7bb8/f1c2c538ee76c0ea7bf7020c040724f2ac094442?placeholderIfAbsent=true"
@@ -531,6 +483,7 @@ const Navbar = () => {
             <span className="text-xs text-gray-600 mt-1">Notifications</span>
           </NavigationMenuItem>
           
+          {/* Quests */}
           <NavigationMenuItem className="flex flex-col items-center">
             <Link to="/TripPlanner">
               <img
@@ -542,6 +495,7 @@ const Navbar = () => {
             </Link>
           </NavigationMenuItem>
           
+          {/* Events */}
           <NavigationMenuItem className="flex flex-col items-center">
             <Link to="/Events">
               <img
@@ -555,22 +509,32 @@ const Navbar = () => {
           
           <div className="border-l border-gray-600 w-0.5 h-10 mx-2"></div>
           
+          {/* Auth Section */}
           <NavigationMenuItem>
             {loading ? (
               <div className="h-[48px] w-[48px] bg-gray-200 animate-pulse rounded-full"></div>
             ) : user ? (
               <div className="relative">
                 <img
-                  src={user.photoURL || "https://cdn.builder.io/api/v1/image/assets/b783a7681e9247dfa6d0b0f79c8d7bb8/f2c04753faeb06e92f8c18ca0b4f344bb630c7e7?placeholderIfAbsent=true"}
+                  src={getUserPhotoURL()}
                   alt="User avatar"
                   className="w-10 h-10 rounded-full cursor-pointer"
                   onClick={() => setIsOpen(!isOpen)}
                 />
                 {isOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50" >
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
                     <div className="px-4 py-2 border-b">
                       <p className="text-sm font-medium">{userData?.displayName || user?.displayName || 'User'}</p>
                       <p className="text-xs text-gray-500">{user.email}</p>
+                      <button
+                        className="mt-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => {
+                          setIsOpen(false);
+                          navigate('/My-Profile');
+                        }}
+                      >
+                        My Profile
+                      </button>
                     </div>
                     <button
                       onClick={handleSignOut}
@@ -582,12 +546,26 @@ const Navbar = () => {
                 )}
               </div>
             ) : (
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets/b783a7681e9247dfa6d0b0f79c8d7bb8/f2c04753faeb06e92f8c18ca0b4f344bb630c7e7?placeholderIfAbsent=true"
-                alt="User avatar"
-                className="w-12 h-12 rounded-full cursor-pointer"
-                onClick={toggleAuthModal}
-              />
+              <div className="flex gap-4 items-center">
+                <button 
+                  className="text-blue-500 font-medium"
+                  onClick={() => {
+                    setAuthStep('email-signin');
+                    setShowAuthModal(true);
+                  }}
+                >
+                  Sign In
+                </button>
+                <button 
+                  className="bg-blue-500 text-white px-4 py-2 rounded-lg font-medium"
+                  onClick={() => {
+                    setAuthStep('email-signup');
+                    setShowAuthModal(true);
+                  }}
+                >
+                  Sign Up
+                </button>
+              </div>
             )}
           </NavigationMenuItem>
         </NavigationMenuList>
@@ -595,62 +573,11 @@ const Navbar = () => {
 
       {/* Mobile Menu Button */}
       <button
-        className=" px-2 md:hidden"
+        className="px-2 md:hidden"
         onClick={() => setIsOpen(true)}
       >
         <RxHamburgerMenu size={30} />
       </button>
-
-      {/* Mobile Sidebar (Sliding Menu) */}
-      {/* <div
-        className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 z-30 ${
-          isOpen ? "opacity-100 visible" : "opacity-0 invisible"
-        }`}
-        onClick={() => setIsOpen(false)}
-      ></div> */}
-
-      <div
-        className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 z-40 
-          -translate-x-full`}
-      >
-        {/* Close Button
-        {/* <button
-          className="absolute top-4 right-4 text-gray-600"
-          onClick={() => setIsOpen(false)}
-        >
-          <IoClose size={24} />
-        </button>
-
-        {/* Menu Items */}
-        {/* <ul className="flex flex-col gap-6 p-6 text-lg mt-10">
-          <li className="hover:text-blue-500 cursor-pointer">
-            <Link to="/" onClick={() => setIsOpen(false)}>Home</Link>
-          </li>
-          <li className="hover:text-blue-500 cursor-pointer">
-            <Link to="/TripPlanner" onClick={() => setIsOpen(false)}>Trip Planner</Link>
-          </li>
-          <li className="hover:text-blue-500 cursor-pointer">
-            <Link to="/Events" onClick={() => setIsOpen(false)}>Events</Link>
-          </li>
-          <li className="hover:text-blue-500 cursor-pointer">
-            <Link to="/About" onClick={() => setIsOpen(false)}>About Us</Link>
-          </li>
-          <li className="hover:text-blue-500 cursor-pointer">
-            <Link to="/contact" onClick={() => setIsOpen(false)}>Contact Us</Link>
-          </li> 
-          {!user && (
-            <li 
-              className="hover:text-blue-500 cursor-pointer"
-              onClick={() => {
-                setIsOpen(false);
-                toggleAuthModal();
-              }}
-            >
-              Sign In/Up
-            </li>
-          )}
-        </ul> 
-       </div> 
 
       {/* Sign In/Sign Up Modal */}
       {showAuthModal && (
@@ -710,7 +637,6 @@ const Navbar = () => {
           </div>
         </>
       )}
-    </div>
     </div>
   );
 };
